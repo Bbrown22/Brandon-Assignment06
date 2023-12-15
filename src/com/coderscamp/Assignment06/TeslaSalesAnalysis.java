@@ -3,6 +3,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,9 +35,10 @@ public class TeslaSalesAnalysis {
     }
 
     private static String convertDate(String date) {
-        String[] parts = date.split("-");
-        String month = new DateFormatSymbols().getMonths()[Integer.parseInt(parts[0]) - 1];
-        return parts[1] + "-" + month;
+        DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("MMM-yy", Locale.ENGLISH);
+        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("yyyy-MM", Locale.ENGLISH);
+        YearMonth parsedDate = YearMonth.parse(date, inputFormat);
+        return outputFormat.format(parsedDate);
     }
     
 
