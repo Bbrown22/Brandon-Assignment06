@@ -24,7 +24,7 @@ public class TeslaSalesAnalysis {
         List<SalesData> salesData = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
-            br.readLine(); // Skip the header line
+            br.readLine(); 
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 String date = convertDate(values[0]);
@@ -45,9 +45,12 @@ public class TeslaSalesAnalysis {
     private static void printSalesReport(String modelName, List<SalesData> salesData) {
         System.out.println(modelName + " Yearly Sales Report");
         System.out.println("---------------------------");
-        salesData.stream()
-                .collect(Collectors.groupingBy(SalesData::getYear, Collectors.summingInt(s -> s.getSales())))
-                .forEach((year, totalSales) -> System.out.println(year + " -> " + totalSales));
+        Map<String, Integer> yearlySales = salesData.stream()
+                .collect(Collectors.groupingBy(SalesData::getYear, Collectors.summingInt(s -> s.getSales())));
+
+        Map<String, Integer> sortedYearlySales = new TreeMap<>(yearlySales);
+
+        sortedYearlySales.forEach((year, totalSales) -> System.out.println(year + " -> " + totalSales));
 
         SalesData bestMonth = salesData.stream().max(Comparator.comparingInt(s -> s.getSales())).orElse(null);
         SalesData worstMonth = salesData.stream().min(Comparator.comparingInt(s -> s.getSales())).orElse(null);
